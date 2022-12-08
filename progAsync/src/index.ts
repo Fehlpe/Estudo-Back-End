@@ -141,4 +141,22 @@ async function getRepositories(repo: string) {
 //   console.log(`Server OK`);
 // });
 
+// --------------------------------------------------------------------- EXERCICIO 6 ------------------------------
 
+// DESCOMENTAR O CODIGO TODO PARA FUNCIONAR
+
+// import express, { Express, query, Request, Response } from "express";
+// const server: Express = express();
+
+// const arraySemVogal: string[] = [];
+
+// server.get('/remover-vogais', (req: Request, res: Response) => {
+//   const { valor } = req.query;
+//   const stringSemVogais = valor!.toString().replace(/[aeiou]/gi, '');
+//   arraySemVogal.push(stringSemVogais);
+//   res.send(arraySemVogal);
+// });
+
+// server.listen(8086, () => {
+//   console.log(`Server OK`);
+// });

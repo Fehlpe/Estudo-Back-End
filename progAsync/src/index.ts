@@ -25,7 +25,6 @@ async function getRepositories(repo: string) {
 // getRepositories("marcelo-growdev/scrapbook-es6");
 // getRepositories("marcelo-growdev/qdbqqbqwn");
 
-
 // --------------------------------------------------------------------- EXERCICIO 2 ------------------------------
 
 // DESCOMENTAR O CODIGO TODO PARA FUNCIONAR
@@ -39,8 +38,8 @@ async function getRepositories(repo: string) {
 //     const operacao = req.query.operacao
 //     const valorA = req.query.valorA
 //     const valorB = req.query.valorB
-//     const numA = Number(valorA) 
-//     const numB = Number(valorB) 
+//     const numA = Number(valorA)
+//     const numB = Number(valorB)
 //     let resultado
 //     switch(operacao) {
 //         case "somar":
@@ -87,5 +86,33 @@ async function getRepositories(repo: string) {
 // });
 
 // server.listen(8083, () => {
+//   console.log(`Server OK`);
+// });
+
+// --------------------------------------------------------------------- EXERCICIO 4 ------------------------------
+
+// DESCOMENTAR O CODIGO TODO PARA FUNCIONAR
+
+// import express, { Express, query, Request, Response } from "express";
+// const server: Express = express();
+
+// server.get("/numeral", (req: Request, res: Response) => {
+//   const { numero, operacao } = req.query;
+//   let resultado;
+
+//   const num = Number(numero);
+
+//   if (operacao === "anterior") {
+//     resultado = num - 1;
+//   } else if (operacao === "proximo") {
+//     resultado = num + 1;
+//   } else {
+//     res.status(400).send({ error: "Operação inválida" });
+//   }
+
+//   res.send(resultado?.toString());
+// });
+
+// server.listen(8084, () => {
 //   console.log(`Server OK`);
 // });

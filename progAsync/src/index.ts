@@ -116,3 +116,29 @@ async function getRepositories(repo: string) {
 // server.listen(8084, () => {
 //   console.log(`Server OK`);
 // });
+
+// --------------------------------------------------------------------- EXERCICIO 5 ------------------------------
+
+// DESCOMENTAR O CODIGO TODO PARA FUNCIONAR
+
+// import express, { Express, query, Request, Response } from "express";
+// const server: Express = express();
+
+// server.get('/inverter-string', (req: Request, res: Response) => {
+//   const { valor } = req.query;
+
+//   if (!valor) {
+//     res.status(400).send({ error: 'O parâmetro "valor" é obrigatório' });
+//     return;
+//   }
+
+//   const stringInvertida = valor!.toString().split('').reverse().join('');
+//   res.send(stringInvertida);
+
+// });
+
+// server.listen(8085, () => {
+//   console.log(`Server OK`);
+// });
+
+

@@ -27,136 +27,118 @@ async function getRepositories(repo: string) {
 
 // --------------------------------------------------------------------- EXERCICIO 2 ------------------------------
 
-// DESCOMENTAR O CODIGO TODO PARA FUNCIONAR
+import express, {Express, query, Request, Response} from 'express';
+const server: Express = express();
 
-// import express, {Express, query, Request, Response} from 'express';
-// const server: Express = express();
+server.use(express.json())
 
-// server.use(express.json())
+server.get('/calculadora', (req: Request, res: Response) => {
+  const operacao = req.query.operacao
+  const valorA = req.query.valorA
+  const valorB = req.query.valorB
+ 
+  if (!operacao || !valorA || !valorB) {
+      res.send("Operação, valor A, e valor B são parâmetros obrigatórios!")
+  } else {
+      const numA = Number(valorA)
+      const numB = Number(valorB)
+      let resultado
+      switch(operacao) {
+          case "somar":
+              resultado = numA + numB
+              break
+          case "subtrair":
+              resultado = numA - numB
+              break
+          case "multiplicar":
+              resultado = numA * numB
+              break
+          case "dividir":
+              resultado = numA / numB
+              break
+          default:
+              res.send("Operação Invalida")
+              break
+      }
+      res.send(resultado?.toString())
+  }
+})
 
-// server.get('/calculadora', (req: Request, res: Response) => {
-//     const operacao = req.query.operacao
-//     const valorA = req.query.valorA
-//     const valorB = req.query.valorB
-//     const numA = Number(valorA)
-//     const numB = Number(valorB)
-//     let resultado
-//     switch(operacao) {
-//         case "somar":
-//             resultado = numA + numB
-//             break
-//         case "subtrair":
-//             resultado = numA - numB
-//             break
-//         case "multiplicar":
-//             resultado = numA * numB
-//             break
-//         case "dividir":
-//             resultado = numA / numB
-//             break
-//         default:
-//             res.send("seloco")
-//             break
-//     }
-//     res.send(resultado?.toString())
-// })
-
-// server.listen(8081, () => {
-//     console.log("Servidor OK");
-//   });
+server.listen(3000, () => {
+    console.log("Servidor OK");
+  });
 
 // --------------------------------------------------------------------- EXERCICIO 3 ------------------------------
 
-// DESCOMENTAR O CODIGO TODO PARA FUNCIONAR
+let contador = 0;
 
-// import express, {Express, query, Request, Response} from 'express';
-// const server: Express = express();
+server.get('/contador', (req: Request, res: Response) => {
+  contador++;
 
-// let contador = 0;
+  res.send(contador.toString())
 
-// server.get('/contador', (req: Request, res: Response) => {
-//   contador++;
-
-//   res.send(contador.toString())
-
-//   if (contador === 10) {
-//     console.log('Chegou à 10');
-//     contador = 0;
-//   }
-// });
-
-// server.listen(8083, () => {
-//   console.log(`Server OK`);
-// });
+  if (contador === 10) {
+    console.log('Chegou à 10');
+    contador = 0;
+  }
+});
 
 // --------------------------------------------------------------------- EXERCICIO 4 ------------------------------
 
 // DESCOMENTAR O CODIGO TODO PARA FUNCIONAR
 
-// import express, { Express, query, Request, Response } from "express";
-// const server: Express = express();
+server.get("/numeral", (req: Request, res: Response) => {
+  const { numero, operacao } = req.query;
+  // Verifica se o parâmetro numero foi fornecido e é um número válido
+  if (!numero) {
+    res.status(400).send({ error: "Número é um parâmetro obrigatório!" });
+  }
+  // Verifica se o parâmetro operacao é válido
+  else if (operacao !== "anterior" && operacao !== "proximo") {
+    res.status(400).send({ error: "Operação inválida! Os valores válidos são 'anterior' ou 'proximo'" });
+  }
+  else {
+    const num = Number(numero);
+    let resultado;
 
-// server.get("/numeral", (req: Request, res: Response) => {
-//   const { numero, operacao } = req.query;
-//   let resultado;
+    if (operacao === "anterior") {
+      resultado = num - 1;
+    } else if (operacao === "proximo") {
+      resultado = num + 1;
+    }
 
-//   const num = Number(numero);
+    res.send(resultado?.toString());
+  }
+});
 
-//   if (operacao === "anterior") {
-//     resultado = num - 1;
-//   } else if (operacao === "proximo") {
-//     resultado = num + 1;
-//   } else {
-//     res.status(400).send({ error: "Operação inválida" });
-//   }
-
-//   res.send(resultado?.toString());
-// });
-
-// server.listen(8084, () => {
-//   console.log(`Server OK`);
-// });
 
 // --------------------------------------------------------------------- EXERCICIO 5 ------------------------------
 
-// DESCOMENTAR O CODIGO TODO PARA FUNCIONAR
+server.get('/inverter-string', (req: Request, res: Response) => {
+  const { valor } = req.query;
 
-// import express, { Express, query, Request, Response } from "express";
-// const server: Express = express();
+  if (!valor) {
+    res.status(400).send({ error: 'O parâmetro "valor" é obrigatório' });
+    return;
+  }
 
-// server.get('/inverter-string', (req: Request, res: Response) => {
-//   const { valor } = req.query;
+  const stringInvertida = valor!.toString().split('').reverse().join('');
+  res.send(stringInvertida);
 
-//   if (!valor) {
-//     res.status(400).send({ error: 'O parâmetro "valor" é obrigatório' });
-//     return;
-//   }
+});
 
-//   const stringInvertida = valor!.toString().split('').reverse().join('');
-//   res.send(stringInvertida);
-
-// });
-
-// server.listen(8085, () => {
-//   console.log(`Server OK`);
-// });
 
 // --------------------------------------------------------------------- EXERCICIO 6 ------------------------------
 
-// DESCOMENTAR O CODIGO TODO PARA FUNCIONAR
+const arraySemVogal: string[] = [];
 
-// import express, { Express, query, Request, Response } from "express";
-// const server: Express = express();
-
-// const arraySemVogal: string[] = [];
-
-// server.get('/remover-vogais', (req: Request, res: Response) => {
-//   const { valor } = req.query;
-//   const stringSemVogais = valor!.toString().replace(/[aeiou]/gi, '');
-//   arraySemVogal.push(stringSemVogais);
-//   res.send(arraySemVogal);
-// });
-
-// server.listen(8086, () => {
-//   console.log(`Server OK`);
-// });
+server.get('/remover-vogais', (req: Request, res: Response) => {
+  const { valor } = req.query;
+  if (!valor) {
+    res.status(400).send({ error: "Valor é um parâmetro obrigatório!" });
+  } else {
+    const stringSemVogais = valor.toString().replace(/[aeiou]/gi, '');
+    arraySemVogal.push(stringSemVogais);
+    res.send(arraySemVogal);
+  }
+});

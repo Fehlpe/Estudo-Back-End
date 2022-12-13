@@ -33,14 +33,14 @@ app.post("/users", (req, res) => {
 });
 
 app.get("/users/:id", (req, res) => {
-  const id = Number(req.params.id);
+  const { id } = req.params;
   if (!id) {
     return res.status(404).json({
       success: false,
       message: "Necessário informar ID",
     });
   } else {
-    const user = users.find((user) => user.id === id);
+    const user = users.find((user) => user.id == id);
 
     if (!user) {
       return res.status(404).json({
@@ -49,10 +49,15 @@ app.get("/users/:id", (req, res) => {
       });
     }
 
-    res.send(user);
     return res.status(200).json({
       success: true,
-      data: user,
+      data: {
+        id: user.id,
+        name: user.name,
+        cpf: user.cpf,
+        email: user.email,
+        age: user.age,
+      },
     });
   }
 });
@@ -178,4 +183,71 @@ app.put("/users/:id", (req, res) => {
   });
 });
 
+app.post("/user/:id/transactions", (req, res) => {
+  const { id } = req.params;
+  const { title, value, type } = req.body;
+
+  console.log(id, title, value, type);
+
+  const user = users.find((user) => user.id == id);
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "Usuário não encontrado",
+    });
+  }
+
+  if (!title || !value || !type) {
+    return res.status(404).json({
+      success: false,
+      message: "Dados obrigatórios não registrados",
+    });
+  }
+
+  const transaction = new Transaction(title, value, type);
+
+  user.transactions.push(transaction);
+
+  return res.status(200).json({
+    success: true,
+    data: transaction,
+  });
+});
+
+app.get("/user/:userId/transactions/:id", (req, res) => {
+  const { userId, id } = req.params;
+
+  const user = users.find((user) => user.id == userId);
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "Usuário não encontrado",
+    });
+  }
+
+  const transaction = user.transactions.find(
+    (transaction) => transaction.id == id
+  );
+  if (!transaction) {
+    return res.status(404).json({
+      success: false,
+      message: "Transação não encontrada",
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    data: transaction,
+  });
+});
+
 app.listen(8081, () => console.log("Server OK"));
+
+// {
+// 	"title": "test 1",
+// 	"value": 1000,
+// 	"type": "income"
+// }
+
+// 93044af0-4caf-413d-be0b-0543e340129a

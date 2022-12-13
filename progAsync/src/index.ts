@@ -85,15 +85,13 @@ server.get('/contador', (req: Request, res: Response) => {
 
 // --------------------------------------------------------------------- EXERCICIO 4 ------------------------------
 
-// DESCOMENTAR O CODIGO TODO PARA FUNCIONAR
 
 server.get("/numeral", (req: Request, res: Response) => {
   const { numero, operacao } = req.query;
-  // Verifica se o parâmetro numero foi fornecido e é um número válido
+
   if (!numero) {
     res.status(400).send({ error: "Número é um parâmetro obrigatório!" });
   }
-  // Verifica se o parâmetro operacao é válido
   else if (operacao !== "anterior" && operacao !== "proximo") {
     res.status(400).send({ error: "Operação inválida! Os valores válidos são 'anterior' ou 'proximo'" });
   }

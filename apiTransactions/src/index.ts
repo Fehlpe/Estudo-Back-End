@@ -242,12 +242,53 @@ app.get("/user/:userId/transactions/:id", (req, res) => {
   });
 });
 
+app.get("/users/:userId/transactions", (req, res) => {
+  const { userId } = req.params;
+  const { title, type } = req.query;
+
+  const user = users.find((user) => user.id == userId);
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "Usuário não encontrado",
+    });
+  }
+
+  let transactions = user.transactions;
+
+  if (title) {
+    transactions = transactions.filter(
+      (transaction) => transaction.title === title
+    );
+  } else if (type) {
+    transactions = transactions.filter(
+      (transaction) => transaction.type === type
+    );
+  } else if (type && title) {
+    return res.status(404).json({
+      success: false,
+      message: "Apenas um filtro pode ser aplicado por vez",
+    });
+  }
+
+  const income = transactions
+    .filter((transaction) => transaction.type === "income")
+    .reduce((acc, transaction) => acc + transaction.value, 0);
+
+  const outcome = transactions
+    .filter((transaction) => transaction.type === "outcome")
+    .reduce((acc, transaction) => acc + transaction.value, 0);
+
+  const total = income - outcome;
+
+  return res.send({
+    transactions,
+    balance: {
+      income,
+      outcome,
+      total,
+    },
+  });
+});
+
 app.listen(8081, () => console.log("Server OK"));
-
-// {
-// 	"title": "test 1",
-// 	"value": 1000,
-// 	"type": "income"
-// }
-
-// 93044af0-4caf-413d-be0b-0543e340129a

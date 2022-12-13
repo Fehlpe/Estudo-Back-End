@@ -256,39 +256,62 @@ app.get("/users/:userId/transactions", (req, res) => {
 
   let transactions = user.transactions;
 
-  if (title) {
-    transactions = transactions.filter(
-      (transaction) => transaction.title === title
-    );
-  } else if (type) {
-    transactions = transactions.filter(
-      (transaction) => transaction.type === type
-    );
-  } else if (type && title) {
-    return res.status(404).json({
+  if (title && type) {
+    return res.status(400).json({
       success: false,
       message: "Apenas um filtro pode ser aplicado por vez",
     });
+  } else if (type) {
+    const newTransactions = transactions.filter(
+      (transaction) => transaction.type == type
+    );
+    if (!newTransactions) {
+      return res.status(404).json({
+        success: false,
+        message: "Transação não encontrada",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      data: newTransactions,
+    });
+  } else if (title) {
+    const newTransactions = transactions.filter(
+      (transaction) => transaction.title == title
+    );
+    if (!newTransactions) {
+      return res.status(404).json({
+        success: false,
+        message: "Transação não encontrada",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      data: newTransactions,
+    });
+  } else if (!type && !title) {
+    const income = transactions
+      .filter((transaction) => transaction.type === "income")
+      .reduce((acc, transaction) => acc + transaction.value, 0);
+
+    const outcome = transactions
+      .filter((transaction) => transaction.type === "outcome")
+      .reduce((acc, transaction) => acc + transaction.value, 0);
+
+    const total = income - outcome;
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        transactions,
+        balance: {
+          income,
+          outcome,
+          total,
+        },
+      },
+    });
   }
-
-  const income = transactions
-    .filter((transaction) => transaction.type === "income")
-    .reduce((acc, transaction) => acc + transaction.value, 0);
-
-  const outcome = transactions
-    .filter((transaction) => transaction.type === "outcome")
-    .reduce((acc, transaction) => acc + transaction.value, 0);
-
-  const total = income - outcome;
-
-  return res.send({
-    transactions,
-    balance: {
-      income,
-      outcome,
-      total,
-    },
-  });
 });
 
 app.listen(8081, () => console.log("Server OK"));

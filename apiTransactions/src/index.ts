@@ -314,4 +314,63 @@ app.get("/users/:userId/transactions", (req, res) => {
   }
 });
 
+app.delete("/users/:userId/transactions/:id", (req, res) => {
+  const { userId, id } = req.params;
+  const user = users.find((user) => user.id == userId);
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "Usuário não encontrado",
+    });
+  }
+  const indice = user.transactions.findIndex(
+    (transaction) => transaction.id == id
+  );
+
+  if (!indice) {
+    return res.status(404).json({
+      success: false,
+      message: "Transação não encontrada",
+    });
+  }
+
+  user.transactions.splice(indice, 1);
+
+  res.status(200).json({
+    sucess: true,
+    message: "Transação removida",
+  });
+});
+
+app.put("/users/:userId/transactions/:id", (req, res) => {
+  const { userId, id } = req.params;
+  const { title, value, type } = req.body;
+
+  const user = users.find((user) => user.id == userId);
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "Usuário não encontrado",
+    });
+  }
+
+  const transaction = user.transactions.find(
+    (transaction) => transaction.id == id
+  );
+  if (!transaction) {
+    return res.status(404).json({
+      success: false,
+      message: "Transação não encontrada",
+    });
+  }
+  title ? (transaction.title = title) : null;
+  value ? (transaction.value = value) : null;
+  type ? (transaction.type = type) : null;
+
+  res.status(200).json({
+    success: true,
+    data: transaction,
+  });
+});
+
 app.listen(8081, () => console.log("Server OK"));

@@ -4,7 +4,7 @@ import verifyUserMiddleware from "../middlewares/verifyUser";
 
 const router = Router();
 
-const users: User[] = [];
+export const users: User[] = [];
 
 router.post("/users", (req: Request, res: Response) => {
   const { name, cpf, email, age } = req.body;
@@ -183,15 +183,15 @@ router.put("/users/:id", (req: Request, res: Response) => {
 });
 
 router.post(
-  "/user/:id/transactions",
+  "/user/:userId/transactions",
   verifyUserMiddleware,
   (req: Request, res: Response) => {
-    const { id } = req.params;
+    const { userId } = req.params;
     const { title, value, type } = req.body;
 
-    console.log(id, title, value, type);
+    console.log(userId, title, value, type);
 
-    const user = users.find((user) => user.id == id);
+    const user = users.find((user) => user.id == userId)!;
 
     if (!title || !value || !type) {
       return res.status(404).json({
@@ -202,7 +202,7 @@ router.post(
 
     const transaction = new Transaction(title, value, type);
 
-    user!.transactions.push(transaction);
+    user.transactions.push(transaction);
 
     return res.status(200).json({
       success: true,
@@ -217,9 +217,9 @@ router.get(
   (req: Request, res: Response) => {
     const { userId, id } = req.params;
 
-    const user = users.find((user) => user.id == userId);
+    const user = users.find((user) => user.id == userId)!;
 
-    const transaction = user!.transactions.find(
+    const transaction = user.transactions.find(
       (transaction) => transaction.id == id
     );
     if (!transaction) {
@@ -243,9 +243,9 @@ router.get(
     const { userId } = req.params;
     const { title, type } = req.query;
 
-    const user = users.find((user) => user.id == userId);
+    const user = users.find((user) => user.id == userId)!;
 
-    let transactions = user!.transactions;
+    let transactions = user.transactions;
 
     if (title && type) {
       return res.status(400).json({
@@ -311,9 +311,9 @@ router.delete(
   verifyUserMiddleware,
   (req: Request, res: Response) => {
     const { userId, id } = req.params;
-    const user = users.find((user) => user.id == userId);
+    const user = users.find((user) => user.id == userId)!;
 
-    const indice = user!.transactions.findIndex(
+    const indice = user.transactions.findIndex(
       (transaction) => transaction.id == id
     );
 
@@ -324,7 +324,7 @@ router.delete(
       });
     }
 
-    user!.transactions.splice(indice, 1);
+    user.transactions.splice(indice, 1);
 
     res.status(200).json({
       sucess: true,
@@ -340,9 +340,9 @@ router.put(
     const { userId, id } = req.params;
     const { title, value, type } = req.body;
 
-    const user = users.find((user) => user.id == userId);
+    const user = users.find((user) => user.id == userId)!;
 
-    const transaction = user!.transactions.find(
+    const transaction = user.transactions.find(
       (transaction) => transaction.id == id
     );
     if (!transaction) {
